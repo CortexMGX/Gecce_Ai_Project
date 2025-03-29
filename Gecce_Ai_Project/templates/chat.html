@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gecce AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>
+              <span style="font-size: 1em;">Gecce AI</span>
+              <span style="margin-left: 10px; font-size: 2em;">🐈‍⬛</span>
+            </h1>
+        </header>
+
+        <div class="main-content">
+            <div class="sidebar">
+                <h2 class="settings-title">Genel Ayarlar</h2>
+                
+                <div class="settings-section">
+                    <h3>Model Seçimi</h3>
+                    <div class="setting-row">
+                        <select id="model-select">
+                            {% for model in models %}
+                            <option value="{{ model.name }}">{{ model.name }} ({{ model.size }} GB)</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="setting-row">
+                        <button id="load-model">Modeli Yükle</button>
+                    </div>
+                    <div id="model-info">
+                        <p>Lütfen bir model seçin ve yükleyin</p>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3>CPU Ayarları</h3>
+                    <div class="setting-row">
+                        <label>Thread Sayısı ({{ system_info.cpu_threads }} çekirdek):</label>
+                        <input type="range" id="cpu-threads" min="1" max="{{ system_info.cpu_threads }}" 
+                               value="{{ settings.cpu_threads }}" step="1">
+                        <span id="cpu-threads-value">{{ settings.cpu_threads }}</span>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3>Bellek Ayarları</h3>
+                    <div class="setting-row">
+                        <label>Bağlam Boyutu (n_ctx):</label>
+                        <input type="range" id="n-ctx" min="128" max="131072" 
+                               value="{{ settings.n_ctx }}" step="128">
+                        <span id="n-ctx-value">{{ settings.n_ctx }}</span>
+                    </div>
+                    <div class="setting-row">
+                        <label>Max Token:</label>
+                        <input type="range" id="max-tokens" min="1" max="131072" 
+                               value="{{ settings.max_tokens }}" step="1">
+                        <span id="max-tokens-value">{{ settings.max_tokens }}</span>
+                    </div>
+                    <div class="setting-row">
+                        <label>Batch Size:</label>
+                        <input type="range" id="n-batch" min="1" max="4096" 
+                               value="{{ settings.n_batch }}" step="1">
+                        <span id="n-batch-value">{{ settings.n_batch }}</span>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3>Optimizasyonlar</h3>
+                    <div class="setting-row checkbox">
+                        <input type="checkbox" id="use-mmap" {% if settings.use_mmap %}checked{% endif %}>
+                        <label for="use-mmap">MMAP (Memory Map) Kullan</label>
+                    </div>
+                    <div class="setting-row checkbox">
+                        <input type="checkbox" id="use-mlock" {% if settings.use_mlock %}checked{% endif %}>
+                        <label for="use-mlock">Belleği Kilitle (mlock)</label>
+                    </div>
+                    <div class="setting-row checkbox">
+                        <input type="checkbox" id="use-flash" {% if settings.use_flash %}checked{% endif %}>
+                        <label for="use-flash">Flash Attention</label>
+                    </div>
+                    <div class="setting-row checkbox">
+                        <input type="checkbox" id="keep-in-memory" {% if settings.keep_in_memory %}checked{% endif %}>
+                        <label for="keep-in-memory">Bellekte Tut</label>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3>Üretim Ayarları</h3>
+                    <div class="setting-row">
+                        <label>Temperature:</label>
+                        <input type="range" id="temperature" min="0.1" max="5.0" 
+                               value="{{ settings.temperature }}" step="0.1">
+                        <span id="temperature-value">{{ settings.temperature }}</span>
+                    </div>
+                    <div class="setting-row">
+                        <label>Top-p:</label>
+                        <input type="range" id="top-p" min="0.0" max="1.0" 
+                               value="{{ settings.top_p }}" step="0.01">
+                        <span id="top-p-value">{{ settings.top_p }}</span>
+                    </div>
+                    <div class="setting-row">
+                        <label>Top-k:</label>
+                        <input type="range" id="top-k" min="1" max="100" 
+                               value="{{ settings.top_k }}" step="1">
+                        <span id="top-k-value">{{ settings.top_k }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-area">
+                <div id="chat-messages">
+                    <div class="ai-message" style="font-size: 2.0rem;">Merhaba! Lütfen bir model yükleyin.</div>
+                </div>
+                <div class="chat-input">
+                    <input type="text" id="user-input" placeholder="Mesaj yaz..." disabled>
+                    <button id="send-button" disabled>Gönder</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+</body>
+</html>

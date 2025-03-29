@@ -1,0 +1,13 @@
+Gecce_Ai/
+├── app.py
+├── user_settings.json (otomatik oluşacak)
+├── static/
+│   ├── css/
+│   │   └── style.css
+│   └── js/
+│       └── chat.js
+├── templates/
+│   └── chat.html
+└── models/
+    ├── model1.gguf
+    └── model2.gguf
